@@ -6,6 +6,6 @@ const rocketFuel = ( input ) => {
     }, 0 );
 }
 
-const output = rocketFuel(input);
+const output = rocketFuel( input );
 
-console.log(output);
+console.log( output );
