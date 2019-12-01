@@ -3,16 +3,11 @@ const input = [ 128270, 147113, 61335, 78766, 119452, 116991, 70640, 145446, 117
 // Calculate each module separately
 const fuelForModule = ( input ) => {
     let fuel = Math.floor( input / 3 ) - 2;
-    if( fuel <= 0 ) {
-        return 0;
-    }
+    if( fuel <= 0 ) return 0;
     return fuel + fuelForModule( fuel );
 }
 
-const output = input.map( ( val ) => {
-        return fuelForModule( val )
-    }).reduce( (a, c) => {
-        return a += c;
-    }, 0);
-    
+const output = input.map( ( val ) => fuelForModule( val ) )
+    .reduce( (a, c) => a += c, 0 );
+
 console.log( output );
