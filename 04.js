@@ -33,15 +33,28 @@ const runProgram = ( arr, str = '', noun = 0, verb = 0 ) => {
         noun = 12;
         verb = 2;
     }
-
     intCode[ 1 ] = noun;
     intCode[ 2 ] = verb;
     return intCodeComputer( intCode );
 }
 
-for ( let noun = 0; noun < 100; noun++ ) {
-    for ( let verb = 0; verb < 100; verb++ ) {
-        if ( runProgram( input, '', noun, verb )[0] === 19690720 )
-            console.log(noun, verb);
+const nounVerbSerach = () => {
+    for ( let noun = 0; noun < 100; noun++ ) {
+        for ( let verb = 0; verb < 100; verb++ ) {
+            if ( runProgram( input, '', noun, verb )[0] === 19690720 )
+                return {
+                    noun,
+                    verb,
+                }
+        }
     }
+    return {
+        noun: null,
+        verb: null,
+    } 
 }
+
+const output = nounVerbSerach();
+
+console.log(output);
+
