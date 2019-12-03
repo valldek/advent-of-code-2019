@@ -50,32 +50,70 @@ const getIntersectionPoints = ( pointsArr1, pointsArr2 ) => {
     let point = [];
     let intersectionPoints = [];
 
-    for ( let i = 1; i < pointsArr1.length; i++ ) {
-        for (let j = 1; j < pointsArr2.length; j++ ) {
-            point = checkIntersection( pointsArr1[ i - 1 ][ 0 ], pointsArr1[ i - 1 ][ 1 ], pointsArr1[ i ][ 0 ], pointsArr1[ i ][ 1 ],
-                                      pointsArr2[ j - 1 ][ 0 ], pointsArr2[ j - 1 ][ 1 ], pointsArr2[ j ][ 0 ], pointsArr2[ j ][ 1 ] );
-            if ( point ) intersectionPoints.push(point);
+    for ( let steps1 = 1; steps1 < pointsArr1.length; steps1++ ) {
+        for (let steps2 = 1; steps2 < pointsArr2.length; steps2++ ) {
+            point = checkIntersection( pointsArr1[ steps1 - 1 ][ 0 ], pointsArr1[ steps1 - 1 ][ 1 ], pointsArr1[ steps1 ][ 0 ], pointsArr1[ steps1 ][ 1 ],
+                                      pointsArr2[ steps2 - 1 ][ 0 ], pointsArr2[ steps2 - 1 ][ 1 ], pointsArr2[ steps2 ][ 0 ], pointsArr2[ steps2 ][ 1 ] );
+            if ( point ) intersectionPoints.push(point, [ steps1, steps2 ] );
         }
     }
     return intersectionPoints;
+};
 
+const getDistanceToIntersection = ( arr1, arr2 ) => {
+    let steps1X = 0;
+    let steps1Y = 0;
+    let steps2X = 0;
+    let steps2Y = 0
+    arr1.reduce( ( acc, cur ) => {
+        steps1X += Math.abs( acc[ 0 ] - cur[ 0 ] );
+        steps1Y += Math.abs( acc[ 1 ] - cur[ 1 ] );
+        return acc = cur;
+    } );
+
+    arr2.reduce( ( acc, cur ) => {
+        steps2X += Math.abs( acc[ 0 ] - cur[ 0 ] );
+        steps2Y += Math.abs( acc[ 1 ] - cur[ 1 ] );
+        return acc = cur;
+    } );
+
+    return steps1X + steps1Y + steps2X + steps2Y;
 }
 
-const getManhattanDistance = ( pointsArr ) => {
-    return pointsArr.map( val => {
-        return val.reduce( ( acc, cur ) => {
-            if ( cur < 0 ) cur = -cur;
-            return acc += cur;
-        }, 0 );
+const setWiresArrToIntersection = ( arr, pointsArr1, pointsArr2 ) => {
+    let out = [];
+    arr.filter( ( val, idx, arr ) => {
+        if ( idx % 2 ) {
+            let pointsOneToIntersection = pointsArr1.slice( 0, val[ 0 ] );
+            pointsOneToIntersection.push( arr[ idx - 1 ] );
+
+            let pointsTwoToIntersection = pointsArr2.slice( 0, val[ 1 ] );
+            pointsTwoToIntersection.push( arr[ idx -1 ]);
+
+            const distance = getDistanceToIntersection( pointsOneToIntersection, pointsTwoToIntersection );
+            out.push( distance );
+        }
     } );
+    return(out);
 }
 
 const pointsOne = getWirePoints( inputOne );
 const pointsTwo = getWirePoints( inputTwo );
 
 const intersectionPoints = getIntersectionPoints( pointsOne, pointsTwo );
-const distance = getManhattanDistance( intersectionPoints );
 
-const output = Math.min( ...distance );
+const output = setWiresArrToIntersection( intersectionPoints, pointsOne, pointsTwo )
 
-console.log( output );
+console.log( Math.min( ...output ) );
+
+const oneInter = pointsOne.slice( 0, intersectionPoints[ 1 ][ 0 ] + 1 );
+oneInter[ oneInter.length -1 ] = intersectionPoints[ 0 ];
+
+const twoInter = pointsTwo.slice( 0, intersectionPoints[ 1 ][ 1 ] + 1 )
+twoInter[ twoInter.length -1 ] = intersectionPoints[ 0 ];
+
+// console.log( oneInter, twoInter );
+// console.log( getDistanceToIntersection( oneInter, twoInter ) )
+
+// console.log( intersectionPoints, pointsOne, pointsTwo );
+
