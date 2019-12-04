@@ -13,14 +13,21 @@ fs.readFile(
             throw new Error('No data to process');
         }
         let output = 0;
+        let afterFirst = [];
         let [min, max] = data.split('-').map( (val) => parseInt(val, 10));
 
         while (min <= max) {
             if (checkDecrease(min) && checkAdjacent(min)) {
-                output++;
+                afterFirst.push(min);
             }
 
             min++
+        }
+
+        for (let num of afterFirst) {
+            if (checkLargerGroup(num)) {
+                output++;
+            }
         }
 
         console.log(output);
@@ -45,4 +52,22 @@ function checkAdjacent (num) {
         }
     }
     return false;
+}
+
+function checkLargerGroup (num) {
+    const numStr = num.toString();
+    const numArr = numStr.split('');
+
+    const numCount = Object.values(
+        numArr.reduce( (acc, cur) => {
+            acc[cur] ? acc[cur] += 1 : acc[cur] = 1;
+            return acc;
+        }, {})
+    );
+
+    if (numCount.indexOf(2) === -1) {
+        return false;
+    }
+
+    return true;
 }
