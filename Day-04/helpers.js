@@ -18,7 +18,26 @@ function checkAdjacent (num) {
     return false;
 }
 
+function checkLargerGroup (num) {
+    const numStr = num.toString();
+    const numArr = numStr.split('');
+
+    const numCount = Object.values(
+        numArr.reduce( (acc, cur) => {
+            acc[cur] ? acc[cur] += 1 : acc[cur] = 1;
+            return acc;
+        }, {})
+    );
+
+    if (numCount.indexOf(2) === -1) {
+        return false;
+    }
+
+    return true;
+}
+
 module.exports = {
     checkDecrease,
     checkAdjacent,
+    checkLargerGroup,
 }
