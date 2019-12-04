@@ -33,5 +33,5 @@ Given this additional criterion, but still ignoring the range rule, the followin
 
 ## Solutions
 
-* `1864`
-* `1258`
+* Part One: `1864`
+* Part Two: `1258`
